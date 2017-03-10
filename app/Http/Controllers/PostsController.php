@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
+use App\Http\Requests\CreatePostRequest;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\UpdatePostrequest;
 
 class PostsController extends Controller
 {
@@ -12,8 +16,8 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-         return view('posts.index');
+    {   $posts=Post::orderBy('id','desc')->paginate();
+         return view('posts.index')->with(['posts'=>$posts]);
     }
 
     /**
@@ -23,7 +27,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -32,9 +36,13 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreatePostRequest $request)
     {
-        //
+        
+       $post = new Post($request->all());
+                 $post->save();
+                
+                 return redirect()->route('posts_path');
     }
 
     /**
@@ -43,9 +51,10 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        return view('posts.show');
+//        $post=Post::find($postId);
+        return view('posts.show')->with(['post'=>$post]);;
     }
 
     /**
@@ -54,9 +63,9 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('posts.edit')->with(['post'=>$post]);
     }
 
     /**
@@ -66,9 +75,13 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePostrequest $request, $id)
     {
-        //
+        
+        $post = Post::find($id);
+		$post->fill($request->all());
+                $post->save();        
+          return redirect()->route('post_path',['post'=>$post->id]);
     }
 
     /**
@@ -79,6 +92,10 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
+      $tag= Post::find($id);
+        $tag->delete();
+         
       
+      return redirect()->route('posts_path');
     }
 }
