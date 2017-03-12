@@ -77,7 +77,8 @@
                 </div>
             </div>
         </nav>
-
+       @include('layouts.error')
+       @include('layouts.message')
         @yield('content')
     </div>
 

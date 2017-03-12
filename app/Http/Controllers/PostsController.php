@@ -41,7 +41,7 @@ class PostsController extends Controller
         
        $post = new Post($request->all());
                  $post->save();
-                
+                 session()->flash('message','Post Creado Exitosamente');
                  return redirect()->route('posts_path');
     }
 
@@ -80,8 +80,9 @@ class PostsController extends Controller
         
         $post = Post::find($id);
 		$post->fill($request->all());
-                $post->save();        
-          return redirect()->route('post_path',['post'=>$post->id]);
+                $post->save();  
+         session()->flash('message','Post Editado Exitosamente');
+        return redirect()->route('posts_path');
     }
 
     /**
@@ -95,7 +96,7 @@ class PostsController extends Controller
       $tag= Post::find($id);
         $tag->delete();
          
-      
+      session()->flash('message','Post Eliminado Exitosamente');
       return redirect()->route('posts_path');
     }
 }
