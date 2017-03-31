@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
+
+use Illuminate\Support\Facades\Redirect;
+
 
 class HomeController extends Controller
 {
@@ -22,7 +26,7 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('home');
+    {  $posts=Post::orderBy('id','desc')->paginate();
+        return view('posts.index')->with(['posts'=>$posts]);
     }
 }
